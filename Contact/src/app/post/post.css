@@ -1,0 +1,72 @@
+.form-container {
+  width: 500px;
+  font-family: system-ui, sans-serif;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  margin: auto;
+}
+.form-heading {
+  text-align: center;
+  margin: 0 0 15px 0; /* top right bottom left */
+  padding: 0;
+  font-size: 1.4em;
+  color: #333;
+  font-weight: 600;
+}
+label {
+  color: black;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 columns */
+  gap: 12px; /* space between fields */
+}
+
+.form-field {
+  margin-bottom: 0; /* remove bottom margin since gap handles spacing */
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: #555;
+}
+
+.form-input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.form-textarea-field {
+  grid-column: span 2; /* makes textarea full width */
+}
+
+.form-textarea {
+  min-height: 80px;
+  width: 100%;
+  resize: vertical;
+}
+
+.form-submit-field {
+  grid-column: span 2; /* makes submit button full width */
+  margin-top: 8px;
+}
+
+.form-submit {
+  width: 100%;
+  padding: 8px;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.form-submit:hover {
+  background: #ebebeb;
+}
