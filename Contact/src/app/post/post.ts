@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   ReactiveFormsModule,
   FormControl,
@@ -7,13 +7,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { HttpService } from '../http.service';
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-post',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './post.html',
   styleUrl: './post.css',
 })
 export class Post {
+  person: any = signal(null);
   form?: any;
   constructor(private HttpService: HttpService) {}
   ngOnInit() {
@@ -32,9 +35,9 @@ export class Post {
     });
   }
   onSubmit() {
-    if (!this.form.valid) {
-      throw new Error('Invalid Form Inputs');
-    }
+    // if (this.form.invalid) {
+    //   throw new Error('Invalid Form Inputs');
+    // }
 
     const dto = {
       firstName: this.form.get('firstName')?.value,
@@ -51,8 +54,68 @@ export class Post {
     };
 
     this.HttpService.httpPost(dto).subscribe({
-      next: (res) => console.log('Success:', res),
-      error: (err) => console.error('Error occurred:', err),
+      next: (response) => {
+        const Id = response.id;
+        alert(`Data posted successfully with ID: ${Id}`);
+        console.log('Response:', response);
+        this.form.reset();
+      },
+      error(err) {
+        if (err.status === 400) {
+          alert('Bad Request: Duplicate or Emptly Form');
+        }
+      },
+    });
+  }
+  getPersonById(value: number) {
+    this.HttpService.httpGet(value).subscribe({
+      next: (response) => {
+        try {
+          this.person.set(response);
+          console.log('Asssigned to person now its value is :', this.person);
+        } catch (error: any) {
+          console.log(error.message);
+        }
+        console.log('Person Details:', response);
+      },
+      error(err) {
+        if (err.status === 404) {
+          alert('Person not found');
+          console.error('Error:', err);
+        }
+      },
+    });
+  }
+  editPersonById(value: number) {
+    this.HttpService.httpPut(value).subscribe({
+      next: (response) => {
+        if (response.status === 204) {
+          alert('Data has been Updated Successfully');
+        }
+        console.log('Put Response:', response);
+      },
+      error(err) {
+        if (err.status === 400) {
+          alert('Bad Request: Invalid Data');
+        } else if (err.status === 404) {
+          alert('Person not found');
+        }
+        console.error('Error:', err);
+      },
+    });
+  }
+  deletePersonById(id: number) {
+    this.HttpService.httpDelete(id).subscribe({
+      next: (res) => {
+        if (res.status === 204) {
+          alert('Your record has been Deleted');
+          console.log('Deleted response', res);
+        }
+      },
+      error: (err) => {
+        alert('something went wrong');
+        console.log('error from delete', err.message);
+      },
     });
   }
 }

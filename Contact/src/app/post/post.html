@@ -80,4 +80,50 @@
   <div class="form-field form-submit-field">
     <button class="form-submit" type="submit">Submit</button>
   </div>
+  <div class="form-field form-submit-field">
+    <button class="form-submit" type="button" (click)="getPersonById(1)">
+      Edit
+    </button>
+  </div>
 </form>
+<div>
+  <div class="form-field form-submit-field">
+    <label for="person">*Enter Your ID: </label><br />
+    <input
+      class="form-field"
+      type="number"
+      placeholder="Enter Your Id"
+      id="person"
+      #temp
+    />
+    <button
+      class="form-submit"
+      type="button"
+      (click)="getPersonById(+temp.value)"
+    >
+      Get Person By Id
+    </button>
+  </div>
+
+  <div>
+    <h2 class="form-heading">Person Details</h2>
+  </div>
+  <div *ngIf="person() as p" class="person-details">
+    <p><strong>ID:</strong> {{ p.id ?? "" }}</p>
+    <p><strong>First Name:</strong> {{ p.firstName ?? "" }}</p>
+    <p><strong>Last Name:</strong> {{ p.lastName ?? "" }}</p>
+    <p><strong>Email:</strong> {{ p.mail ?? "" }}</p>
+    <p><strong>Gender:</strong>{{ p.gender ?? "" }}</p>
+    <p><strong>Street:</strong> {{ p.address?.street ?? "" }}</p>
+    <p><strong>City:</strong> {{ p.address?.city ?? "" }}</p>
+    <p><strong>Country:</strong> {{ p.address?.country ?? "" }}</p>
+    <p><strong>Phone:</strong> {{ p.phone ?? "" }}</p>
+    <p><strong>Description:</strong> {{ p.description ?? "" }}</p>
+  </div>
+</div>
+<div>
+  <h2>Delete Your Record</h2>
+  <label for="del">Enter your ID</label>
+  <input type="number" placeholder="Enter Your Id" #Id />
+  <button type="submit" (click)="deletePersonById(+Id.value)">Delete</button>
+</div>
