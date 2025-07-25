@@ -11,14 +11,4 @@ import { HttpService } from './http.service';
 export class App {
   httpService = inject(HttpService);
   protected readonly title = signal('Contact');
-  Get() {
-    this.httpService.httpGet().subscribe({
-      next: (response) => {
-        console.log('Response from server:', response);
-      },
-      error: (error) => {
-        console.error('Error occurred:', error);
-      },
-    });
-  }
 }
