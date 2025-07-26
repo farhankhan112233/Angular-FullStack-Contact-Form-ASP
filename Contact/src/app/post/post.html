@@ -1,5 +1,10 @@
 <form class="form-container" [formGroup]="form" (ngSubmit)="onSubmit()">
   <h2 class="form-heading">Registration Form</h2>
+  <div *ngIf="id()" class="id-display">
+    <h2>Registered Id is: {{ id() }}</h2>
+    <h3>If you want to edit.Go ahead then click Save Edited</h3>
+    <h2>Otherwise Click Clear</h2>
+  </div>
   <div class="form-grid">
     <div class="form-field">
       <label class="form-label" for="firstname">First Name</label>
@@ -81,44 +86,48 @@
     <button class="form-submit" type="submit">Submit</button>
   </div>
   <div class="form-field form-submit-field">
-    <button class="form-submit" type="button" (click)="getPersonById(1)">
-      Edit
+    <button class="form-submit" type="button" (click)="editPersonById()">
+      Save Edited
     </button>
+    <hr />
   </div>
 </form>
+<button class="form-field form-submit-field" (click)="clearForm()">
+  Clear
+</button>
 <div>
   <div class="form-field form-submit-field">
+    <h2>See Your Info</h2>
     <label for="person">*Enter Your ID: </label><br />
     <input
       class="form-field"
-      type="number"
+      type="text"
       placeholder="Enter Your Id"
       id="person"
       #temp
     />
-    <button
-      class="form-submit"
-      type="button"
-      (click)="getPersonById(+temp.value)"
-    >
-      Get Person By Id
+    <button type="button" (click)="checkInputValue(temp.value)">
+      Click to See Info
     </button>
   </div>
 
   <div>
     <h2 class="form-heading">Person Details</h2>
   </div>
-  <div *ngIf="person() as p" class="person-details">
-    <p><strong>ID:</strong> {{ p.id ?? "" }}</p>
-    <p><strong>First Name:</strong> {{ p.firstName ?? "" }}</p>
-    <p><strong>Last Name:</strong> {{ p.lastName ?? "" }}</p>
-    <p><strong>Email:</strong> {{ p.mail ?? "" }}</p>
-    <p><strong>Gender:</strong>{{ p.gender ?? "" }}</p>
-    <p><strong>Street:</strong> {{ p.address?.street ?? "" }}</p>
-    <p><strong>City:</strong> {{ p.address?.city ?? "" }}</p>
-    <p><strong>Country:</strong> {{ p.address?.country ?? "" }}</p>
-    <p><strong>Phone:</strong> {{ p.phone ?? "" }}</p>
-    <p><strong>Description:</strong> {{ p.description ?? "" }}</p>
+  <div *ngIf="display">
+    <div *ngIf="person() as p" class="person-details">
+      <p><strong>ID:</strong> {{ p.id ?? "" }}</p>
+      <p><strong>First Name:</strong> {{ p.firstName ?? "" }}</p>
+      <p><strong>Last Name:</strong> {{ p.lastName ?? "" }}</p>
+      <p><strong>Email:</strong> {{ p.mail ?? "" }}</p>
+      <p><strong>Gender:</strong>{{ p.gender ?? "" }}</p>
+      <p><strong>Street:</strong> {{ p.address?.street ?? "" }}</p>
+      <p><strong>City:</strong> {{ p.address?.city ?? "" }}</p>
+      <p><strong>Country:</strong> {{ p.address?.country ?? "" }}</p>
+      <p><strong>Phone:</strong> {{ p.phone ?? "" }}</p>
+      <p><strong>Description:</strong> {{ p.description ?? "" }}</p>
+      <h3>To remove your info. See below</h3>
+    </div>
   </div>
 </div>
 <div>
