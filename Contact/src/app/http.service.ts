@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 @Injectable({
@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 })
 export class HttpService {
   httpClient = inject(HttpClient);
+
   httpPost(data: any): Observable<any> {
     const url = 'https://localhost:7072/api/Persons';
     return this.httpClient.post(url, data, {
@@ -20,12 +21,13 @@ export class HttpService {
   // httpGetPersonById(): Observable<any>{
   //   this.httpGet
   // }
-  httpPut(id: number): Observable<any> {
+  httpPut(id: number, data: any): Observable<any> {
     const url = `https://localhost:7072/api/Persons/${id}`;
-    return this.httpClient.put(url, {
+    return this.httpClient.put(url, data, {
       headers: { 'Content-Type': 'application/json' },
     });
   }
+
   httpDelete(id: number): Observable<any> {
     const url = `https://localhost:7072/api/Persons/${id}`;
     return this.httpClient.delete(url, {
