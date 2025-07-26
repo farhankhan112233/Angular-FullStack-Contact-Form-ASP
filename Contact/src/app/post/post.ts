@@ -11,17 +11,18 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-post',
+  standalone: true,
   imports: [ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './post.html',
-  styleUrl: './post.css',
+  styleUrls: ['./post.css'],
 })
 export class Post {
-  person: any = signal(null);
-  form?: any;
-  display: boolean = true;
-  id = signal(null);
-
+  person = signal<any>(null);
+  id = signal<number | null>(null);
+  display = true;
+  form: any;
   constructor(private HttpService: HttpService) {}
+
   ngOnInit() {
     this.form = new FormGroup({
       firstName: new FormControl('', Validators.required),
@@ -39,41 +40,28 @@ export class Post {
   }
 
   onSubmit() {
-    // if (this.form.invalid) {
-    //   throw new Error('Invalid Form Inputs');
-    // }
+    if (this.form.invalid) {
+      alert('Please fill out all required fields.');
+      return;
+    }
 
-    const dto = {
-      firstName: this.form.get('firstName')?.value,
-      lastName: this.form.get('lastName')?.value,
-      mail: this.form.get('mail')?.value,
-      gender: this.form.get('gender')?.value,
-      address: {
-        street: this.form.get('Address.street')?.value,
-        city: this.form.get('Address.city')?.value,
-        country: this.form.get('Address.country')?.value,
-      },
-      phone: this.form.get('phone')?.value,
-      description: this.form.get('description')?.value,
-    };
+    const dto = this.extractDtoFromForm();
 
     this.HttpService.httpPost(dto).subscribe({
       next: (response) => {
         const Id = response.id;
         this.id.set(Id);
-
-        alert(
-          `Registered Successfully! Your Id is :  ${Id}. If You want to see your details, please enter your Id in the input field and click on "Click to See Info" button.`
-        );
+        alert(`Registered Successfully! Your Id is: ${Id}`);
         console.log('Response:', response);
       },
       error(err) {
         if (err.status === 400) {
-          alert('Bad Request: Duplicate or Emptly Form');
+          alert('Data Already Exists');
         }
       },
     });
   }
+
   getPersonById(value: number) {
     this.HttpService.httpGet(value).subscribe({
       next: (response) => {
@@ -94,27 +82,57 @@ export class Post {
     this.HttpService.httpDelete(id).subscribe({
       next: (res) => {
         if (res.status === 204) {
-          alert('Your record has been Deleted');
-          this.display = false;
+          alert('Your record has been deleted');
           this.person.set(null);
+          this.display = false;
           this.id.set(null);
           console.log('Deleted response', res);
         }
       },
       error: (err) => {
-        alert('Id not found or already deleted. Enter a valid Id');
-        console.log('error from delete', err.message);
+        alert('Id not found or already deleted.');
+        console.log('Error from delete:', err.message);
       },
     });
   }
+
   editPersonById() {
-    const id = this.id();
-    if (!id) {
-      alert('No id found. Please register first.');
+    const personId = this.id();
+    if (!personId) {
+      alert('No ID found. Please register first.');
       return;
     }
 
-    const editedDto = {
+    const dto = this.extractDtoFromForm();
+
+    this.HttpService.httpPut(personId, dto).subscribe({
+      next: (response) => {
+        alert('Record updated successfully.');
+        this.getPersonById(personId);
+        console.log('Updated response:', response);
+      },
+      error: (err) => {
+        console.error('Error updating:', err.message, err.status);
+        alert('Update failed.');
+      },
+    });
+  }
+
+  checkInputValue(input: any) {
+    const regex = /^[0-9]+$/;
+    if (!regex.test(input)) {
+      alert('Please enter a valid ID');
+      return;
+    }
+    this.getPersonById(+input);
+  }
+
+  clearForm() {
+    this.form.reset();
+  }
+
+  private extractDtoFromForm() {
+    return {
       firstName: this.form.get('firstName')?.value,
       lastName: this.form.get('lastName')?.value,
       mail: this.form.get('mail')?.value,
@@ -127,34 +145,5 @@ export class Post {
       phone: this.form.get('phone')?.value,
       description: this.form.get('description')?.value,
     };
-    this.HttpService.httpPut(id, editedDto).subscribe({
-      next: (response) => {
-        alert('Your record has been updated successfully');
-        this.getPersonById(id);
-        console.log('Updated response:', response);
-      },
-      error: (err) => {
-        if (err.status === 404) {
-          alert('Person not found');
-          console.error('Error:', err);
-        } else {
-          alert('Failed to update the record');
-          console.error('Error:', err);
-        }
-      },
-    });
-  }
-  checkInputValue(para: any) {
-    const regex = /^[0-9]+$/;
-    if (!regex.test(para)) {
-      alert('Please enter a valid ID');
-      throw new Error('Input is Not number');
-    } else {
-      this.getPersonById(para);
-    }
-  }
-  clearForm() {
-    this.form.reset();
-    this.id.set(null);
   }
 }
