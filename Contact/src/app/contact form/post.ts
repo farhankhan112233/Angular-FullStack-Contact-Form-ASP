@@ -6,7 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { HttpService } from '../http.service';
+import { HttpService } from '../Services/http.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -79,6 +79,10 @@ export class Post {
   }
 
   deletePersonById(id: number) {
+    if (!id) {
+      alert('Enter a Valid Id');
+      return;
+    }
     this.HttpService.httpDelete(id).subscribe({
       next: (res) => {
         if (res.status === 204) {
