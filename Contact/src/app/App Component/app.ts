@@ -4,11 +4,8 @@ import { Post } from '../contact form/post';
 import { HttpService } from '../Services/http.service';
 @Component({
   selector: 'app-root',
-  imports: [Post],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {
-  httpService = inject(HttpService);
-  protected readonly title = signal('Contact');
-}
+export class App {}
