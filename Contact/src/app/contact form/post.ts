@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { HttpService } from '../Services/http.service';
 import { CommonModule } from '@angular/common';
+import { log } from 'node:console';
 
 @Component({
   selector: 'app-post',
@@ -55,9 +56,7 @@ export class Post {
         console.log('Response:', response);
       },
       error(err) {
-        if (err.status === 400) {
-          alert('Data Already Exists');
-        }
+        console.log('error in post', err, err.message);
       },
     });
   }

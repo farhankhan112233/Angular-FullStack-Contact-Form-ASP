@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { FormGroup } from '@angular/forms';
 @Injectable({
   providedIn: 'root',
 })
@@ -33,6 +34,12 @@ export class HttpService {
     return this.httpClient.delete(url, {
       responseType: 'text',
       observe: 'response',
+    });
+  }
+  loginPost(logindata: any): Observable<any> {
+    const url = 'https://localhost:7072/api/Persons/login';
+    return this.httpClient.post(url, logindata, {
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 }
