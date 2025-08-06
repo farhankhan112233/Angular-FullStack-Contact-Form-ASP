@@ -39,8 +39,10 @@ export class Login {
     this.httpService.loginPost(dto).subscribe({
       next: (res) => {
         this.route.navigate(['form']);
+        if (res === null) {
+          return;
+        }
         sessionStorage.setItem('Token', res.token);
-        console.log('Response recieved');
       },
       error: (err) => {
         if (err.status == 400) {
