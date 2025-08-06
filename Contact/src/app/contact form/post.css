@@ -1,0 +1,221 @@
+.main-layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Side boxes styling */
+.side-box {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+/* Form container styling */
+.form-container {
+  flex: 1;
+  min-width: 0; /* Prevent flex item overflow */
+  max-width: 700px;
+  font-family: system-ui, sans-serif;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 20px;
+  background-color: #fafafa;
+}
+
+/* Form headings */
+.form-heading,
+.form-headingg {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Form grid layout */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #444;
+  font-weight: 500;
+}
+
+.form-input,
+.form-textarea {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.form-textarea-field {
+  grid-column: span 2;
+}
+
+.form-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Form buttons */
+.form-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.form-submit {
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.form-submit:hover {
+  background-color: #e0e0e0;
+}
+
+/* Info section styling */
+.form-section {
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #fafafa;
+  margin-bottom: 20px;
+}
+
+.form-section h2 {
+  font-size: 1.3em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.form-section label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.form-section input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-section button {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.form-section button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Person details styling */
+.below-info {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  background: #fefefe;
+  border-radius: 6px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.person-details {
+  margin-top: 15px;
+}
+
+.person-details p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #222;
+}
+
+.person-details strong {
+  color: #333;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .main-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .side-box {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .form-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-textarea-field {
+    grid-column: span 1;
+  }
+
+  .form-container,
+  .side-box {
+    padding: 15px;
+  }
+}
+.registered-message {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  color: #333;
+  text-align: center;
+
+  border-radius: 6px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
