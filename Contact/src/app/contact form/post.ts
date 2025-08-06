@@ -116,6 +116,7 @@ export class Post {
       },
       error: (err) => {
         console.error('Error updating:', err.message, err.status);
+        console.log(personId);
         alert('Update failed.');
       },
     });

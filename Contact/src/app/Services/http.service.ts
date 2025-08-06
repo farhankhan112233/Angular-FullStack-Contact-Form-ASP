@@ -37,7 +37,7 @@ export class HttpService {
     });
   }
   loginPost(logindata: any): Observable<any> {
-    const url = 'https://localhost:7072/api/Persons/login';
+    const url = 'https://localhost:7072/api/Login';
     return this.httpClient.post(url, logindata, {
       headers: { 'Content-Type': 'application/json' },
     });
