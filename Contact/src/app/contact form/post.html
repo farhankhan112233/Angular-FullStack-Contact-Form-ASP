@@ -22,18 +22,14 @@
         <p><strong>Country:</strong> {{ person().address?.country ?? "" }}</p>
         <p><strong>Phone:</strong> {{ person().phone ?? "" }}</p>
         <p><strong>Description:</strong> {{ person().description ?? "" }}</p>
+        <button (click)="editPersonById()">Edit</button>
       </div>
     </div>
   </div>
 
   <div class="form-container">
-    <form class="form-container" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form class="form-container" [formGroup]="form">
       <h2 class="form-heading">Registration Form</h2>
-
-      <div class="registered-message" *ngIf="id()">
-        <h2>Registered ID: {{ id() }}</h2>
-        <h3>You can now edit and click "Save Edited" or click "Clear"</h3>
-      </div>
 
       <div class="form-grid">
         <div class="form-field">
@@ -129,13 +125,10 @@
       </div>
 
       <div class="form-buttons">
-        <button class="form-submit" type="submit">Submit</button>
-        <button class="form-submit" type="button" (click)="editPersonById()">
-          Save Edited
+        <button class="form-submit" (click)="onSubmit()" type="submit">
+          {{ isEdit ? "Save" : "Update" }}
         </button>
-        <button class="form-submit" type="button" (click)="clearForm()">
-          Clear
-        </button>
+        <button (click)="clearForm()">Clear</button>
       </div>
     </form>
   </div>

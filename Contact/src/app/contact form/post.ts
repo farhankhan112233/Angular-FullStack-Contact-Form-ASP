@@ -1,14 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import {
-  ReactiveFormsModule,
   FormControl,
-  FormsModule,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { HttpService } from '../Services/http.service';
-import { CommonModule } from '@angular/common';
-import { log } from 'node:console';
 
 @Component({
   selector: 'app-post',
@@ -20,11 +19,12 @@ import { log } from 'node:console';
 export class Post {
   person = signal<any>(null);
   id = signal<number | null>(null);
-  display = true;
-  form: any;
+  display: boolean = true;
+  form!: any;
+  isEdit: boolean = true;
   constructor(private HttpService: HttpService) {}
 
-  ngOnInit() {
+  formValues() {
     this.form = new FormGroup({
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl(''),
@@ -39,26 +39,51 @@ export class Post {
       description: new FormControl(''),
     });
   }
+  ngOnInit() {
+    this.formValues();
+  }
 
   onSubmit() {
     if (this.form.invalid) {
       alert('Please fill out all required fields.');
       return;
     }
-
-    const dto = this.extractDtoFromForm();
-
-    this.HttpService.httpPost(dto).subscribe({
-      next: (response) => {
-        const Id = response.id;
-        this.id.set(Id);
-        alert(`Registered Successfully! Your Id is: ${Id}`);
-        console.log('Response:', response);
-      },
-      error(err) {
-        console.log('error in post', err, err.message);
-      },
-    });
+    if (!this.isEdit) {
+      const personId = this.id();
+      if (!personId) {
+        alert('No ID found. Please register first.');
+        return;
+      }
+      const dto = this.extractDtoFromForm();
+      this.HttpService.httpPut(personId, dto).subscribe({
+        next: (response) => {
+          this.id.set(response.id);
+          this.form.reset();
+          alert('Record updated successfully.');
+        },
+        error: (err) => {
+          alert('Update failed. Please try again.' + err.message);
+        },
+      });
+    } else {
+      const dto = this.extractDtoFromForm();
+      this.form.reset();
+      this.HttpService.httpPost(dto).subscribe({
+        next: (response) => {
+          this.id.set(response.id);
+          this.display = true;
+          this.person.set(response);
+          alert(`Registered Successfully!`);
+          console.log('Response:', response);
+        },
+        error(err) {
+          console.log('error in post', err, err.message);
+          if (err.status == 400) {
+            alert('Data Already Exists');
+          }
+        },
+      });
+    }
   }
 
   getPersonById(value: number) {
@@ -74,6 +99,23 @@ export class Post {
           console.error('Error:', err);
         }
       },
+    });
+  }
+  editPersonById() {
+    const personId = this.id();
+    this.isEdit = false;
+    this.form.patchValue({
+      firstName: this.person().firstName,
+      lastName: this.person().lastName,
+      mail: this.person().mail,
+      gender: this.person().gender,
+      Address: {
+        street: this.person().address.street,
+        city: this.person().address.city,
+        country: this.person().address.country,
+      },
+      phone: this.person().phone,
+      description: this.person().description,
     });
   }
 
@@ -93,31 +135,7 @@ export class Post {
         }
       },
       error: (err) => {
-        alert('Id not found or already deleted.');
         console.log('Error from delete:', err.message);
-      },
-    });
-  }
-
-  editPersonById() {
-    const personId = this.id();
-    if (!personId) {
-      alert('No ID found. Please register first.');
-      return;
-    }
-
-    const dto = this.extractDtoFromForm();
-
-    this.HttpService.httpPut(personId, dto).subscribe({
-      next: (response) => {
-        alert('Record updated successfully.');
-        this.getPersonById(personId);
-        console.log('Updated response:', response);
-      },
-      error: (err) => {
-        console.error('Error updating:', err.message, err.status);
-        console.log(personId);
-        alert('Update failed.');
       },
     });
   }
@@ -133,6 +151,10 @@ export class Post {
 
   clearForm() {
     this.form.reset();
+    this.display = false;
+    this.isEdit = true;
+    this.person.set(null);
+    this.id.set(null);
   }
 
   private extractDtoFromForm() {
